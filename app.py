@@ -1490,8 +1490,8 @@ class NezhaPythonClient:
                 self.running = False
                 raise
             except Exception as e:
-                logger.warning(f'Nezha client reconnecting: {self._short_error(e)}')
                 if DEBUG:
+                    logger.debug(f'Nezha client reconnecting: {self._short_error(e)}')
                     logger.debug(f'Nezha client disconnected detail: {e}')
             await self._close_channel()
             await self._close_terminals()
