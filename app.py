@@ -1490,8 +1490,9 @@ class NezhaPythonClient:
                 self.running = False
                 raise
             except Exception as e:
+                logger.warning(f'Nezha client reconnecting: {self._short_error(e)}')
                 if DEBUG:
-                    logger.debug(f'Nezha client disconnected: {e}')
+                    logger.debug(f'Nezha client disconnected detail: {e}')
             await self._close_channel()
             await self._close_terminals()
             await self._close_file_managers()
@@ -1500,6 +1501,14 @@ class NezhaPythonClient:
 
     def stop(self):
         self.running = False
+
+    @staticmethod
+    def _short_error(error):
+        code = getattr(error, 'code', lambda: None)()
+        details = getattr(error, 'details', lambda: '')()
+        if code:
+            return f'{code.name}: {details}'
+        return str(error)
 
     async def _run_once(self):
         self.channel = self._new_channel()
